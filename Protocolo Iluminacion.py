@@ -6,21 +6,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.section import WD_SECTION
 from docx.enum.table import WD_ALIGN_VERTICAL
-
-
-print("Protocolo de iluminacion by Txema/Zapi")
-
-empresa = 'Corredores Viales SA' #input("Ingrese nombre de la empresa ")
-cuit = '35030043' #input("Ingrese CUIT de la empresa ")
-dir = 'Pte. Saenz Pena 777' #input("Ingrese direccion de la empresa ")
-localidad = 'CABA' #input("Ingrese localidad de la empresa ")
-provincia = 'Bs As' #input("Ingrese provincia de la empresa ")
-cp = '2000' #input("Ingrese codigo postal ")
-instrumento = 'marca TES, modelo 1330, serie 92409619'#input("Ingrese Marca y Modelo del intrumento de Medicion ")
-calibrado = '05/08/2023'#input("Ingrese Fecha de Calibracion ")
-puestos = 2 #int(input("Ingrese la cantidad de puestos de trabajo a evaluar "))
-data_puesto = {} # CREA DICCIONARIO SIN DATOS
-tabla_puestos = [] #  CREA LISTA DE DICCIONARIOS EN BASE A DATA_SOURCE
+import argparse
 
 
 def med_puesto (nombre_puesto, renglon):                          # DECLARA ARRAY SOLICITA MEDIDAS DEL PUESTO X,Y Y GENERA UNA MATRIZ
@@ -83,7 +69,6 @@ def med_puesto (nombre_puesto, renglon):                          # DECLARA ARRA
         #'x' : x,
         #'y' : y,
     }
-    tabla_puestos.append(mediciones_puesto)
     return lux, x, y, mediciones_puesto
 
 
@@ -143,7 +128,7 @@ def change_orientation(document):           # CAMBIA ORIENTACION DE PAGINA EN CR
     return new_section
 
 
-def crear_doc(empresa:str, data_puesto:dict):        # CREA DOCUMENTO WORD
+def crear_doc(empresa:str, cuit:str, localidad:str, provincia:str, instrumento:str, calibrado:str, puestos:int, cp:str, data_puesto:dict, tabla_puestos):        # CREA DOCUMENTO WORD
     """Crea documento Word
 
     Args:
@@ -333,10 +318,46 @@ def crear_doc(empresa:str, data_puesto:dict):        # CREA DOCUMENTO WORD
     
     document.save('Protocolo de Iluminacion para la empresa ' + empresa + '.docx')
 
+def main(args):
+    print("Protocolo de iluminacion by Txema/Zapi")
+    data_puesto = {} # CREA DICCIONARIO SIN DATOS
+    tabla_puestos = [] #  CREA LISTA DE DICCIONARIOS EN BASE A DATA_SOURCE
+    for puesto in range (args.puestos):          # BUCLE QUE SOLICITA CANTIDAD DE PUESTOS Y REPITE LAS MEDICIONES Y CALCULOS DE MATRICES
+        n_puesto = input("Ingrese nombre del puesto de trabajo -> ")
+        lux, x, y, medicion_puesto = med_puesto(n_puesto, puesto) 
+        data_puesto[n_puesto] = medicion_puesto #DICCIONARIO CON CLAVE 'NOMBRE DEL PUESTO' QUE CONTIENE UN DICCIONARIO.
+        tabla_puestos.append(medicion_puesto)
 
-for puesto in range (puestos):          # BUCLE QUE SOLICITA CANTIDAD DE PUESTOS Y REPITE LAS MEDICIONES Y CALCULOS DE MATRICES
-    n_puesto = input("Ingrese nombre del puesto de trabajo -> ")
-    medicion_puesto = med_puesto(n_puesto, puesto) 
-    data_puesto[n_puesto] = medicion_puesto #DICCIONARIO CON CLAVE 'NOMBRE DEL PUESTO' QUE CONTIENE UN DICCIONARIO.
+    crear_doc (args.empresa, args.cuit, args.localidad, args.provincia, args.instrumento, args.calibrado, args.puestos, args.cp, data_puesto, tabla_puestos)
+
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--empresa', type=str, default='Corredores Viales SA', help='Nombre de la empresa')
+    parser.add_argument('--cuit', type=str, default='35030043', help='CUIT de la empresa')
+    parser.add_argument('--dir', type=str, default="Pte. Saenz Pena 777", help='Direccion de la empresa ')
+    parser.add_argument('--localidad', type=str, default='CABA', help='Localidad de la empresa.')
+    parser.add_argument('--provincia', type=str, default='Bs As', help='Provincia de la empresa')
+    parser.add_argument('--cp', type=str, default='2000', help='Codigo postal')
+    parser.add_argument('--instrumento', type=str, default='marca TES, modelo 1330, serie 92409619', help='Marca y Modelo del intrumento de Medicion')
+    parser.add_argument('--calibrado', type=str, default='05/08/2023', help='Fecha de Calibracion')
+    parser.add_argument('--puestos', type=str, default=2, help='Cantidad de puestos de trabajo a evaluar')
     
-crear_doc (empresa, data_puesto)
+    args = parser.parse_args()
+
+    main(args)
+
+
+    # ⣿⣿⣿⣿⣿⣿⣶⣾⣿⣿⣿⣿⣿⣶⣿⣿⣿⣷⣿⣿⣿⣿
+    # ⣿⣿⡿⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⢿⣿⣿⣿⣿⣿
+    # ⣿⣿⣧⡀⠀⠉⠻⢿⣿⣿⣿⣿⣿⣏⠁⠀⠀⢙⣿⣿⣿⣿
+    # ⣿⣿⣿⣿⣄⠀⠀⠀⠙⠻⢿⣿⣿⣿⣷⣦⡀⣸⣿⣿⣿⣿
+    # ⢹⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠙⠻⢿⣿⣿⣿⣿⣿⣿⣿⡁
+    # ⣾⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠉⠻⢿⣿⣿⣿⣿⡇
+    # ⣿⣿⣿⣿⠿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣷
+    # ⢹⣿⣿⠇⠀⠈⠻⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⢠⣿⣿⣿
+    # ⣾⣿⣿⣄⡀⠀⠀⣈⣿⣿⣿⣿⣿⣦⡀⠀⠀⠀⣸⣿⣿⣿
+    # ⣿⣿⣿⣿⣿⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣶⣶⣿⣿⣿⣿
+    # ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢿⣿⣿⣿⣿
+    # ⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠛⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀
