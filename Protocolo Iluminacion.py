@@ -12,7 +12,7 @@ print("Protocolo de iluminacion by Txema/Zapi")
 
 empresa = 'Corredores Viales SA' #input("Ingrese nombre de la empresa ")
 cuit = '35030043' #input("Ingrese CUIT de la empresa ")
-dir = 'Pte. Saenz Pena 777' #input("Ingrese direccion de la empresa ")
+dire = 'Pte. Saenz Pena 777' #input("Ingrese direccion de la empresa ")
 localidad = 'CABA' #input("Ingrese localidad de la empresa ")
 provincia = 'Bs As' #input("Ingrese provincia de la empresa ")
 cp = '2000' #input("Ingrese codigo postal ")
@@ -162,7 +162,7 @@ def crear_doc(empresa:str, data_puesto:dict):        # CREA DOCUMENTO WORD
     header_para = header.paragraphs[0]
 
     # Adding the centred zoned header
-    header_para.text = f"\t{empresa} - CUIT {cuit} - Ciudad: {localidad} - Dirección: {dir} "
+    header_para.text = f"\t{empresa} - CUIT {cuit} - Ciudad: {localidad} - Dirección: {dire} "
 
     footer = section.footer
     # Calling the paragraph already present in the footer section
@@ -193,7 +193,7 @@ def crear_doc(empresa:str, data_puesto:dict):        # CREA DOCUMENTO WORD
     paragraph = document.add_paragraph()
     paragraph.add_run('\tNombre de la empresa: '+ '\t\t' + empresa + '\n', style = 'Calibri_18')
     paragraph.add_run('\tNumero de CUIT/CUIL: '+ '\t\t' +cuit + '\n', style = 'Calibri_18')
-    paragraph.add_run('\tDirección: '+ '\t\t\t\t' +dir + '\n', style = 'Calibri_18')
+    paragraph.add_run('\tDirección: '+ '\t\t\t\t' +dire + '\n', style = 'Calibri_18')
     paragraph.add_run('\tLocalidad: '+ '\t\t\t\t' +localidad + '\n', style = 'Calibri_18')
     paragraph.add_run('\tCódigo Postal: '+ '\t\t\t' +cp + '\n\n\n\n', style = 'Calibri_18')
     
@@ -211,7 +211,7 @@ def crear_doc(empresa:str, data_puesto:dict):        # CREA DOCUMENTO WORD
     document.add_heading('PROTOCOLO PARA MEDICION DE ILUMINACION DE AMBIENTE LABORAL', level=2)
     document.add_paragraph(f'''
         Razón social: {empresa}
-        Dirección: {dir}
+        Dirección: {dire}
         Localidad: {localidad}
         Provincia: {provincia}
         CP: {cp}
